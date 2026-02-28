@@ -3,7 +3,7 @@
 
 RECwerk is a high-performance audio editing suite for Linux, Windows, and macOS. It is a native desktop evolution of the brilliant **AudioMass** engine, modernized with a classic Syntrillium-inspired aesthetic and expanded with professional features like real-time monitoring and stereo recording.
 
-**Live Web Version:** [https://flarkflarkflark.github.io/REQwerk/](https://flarkflarkflark.github.io/REQwerk/)
+**Live Web Version:** [https://flarkflarkflark.github.io/RECwerk/](https://flarkflarkflark.github.io/RECwerk/)
 
 ---
 
