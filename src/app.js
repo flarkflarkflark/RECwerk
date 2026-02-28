@@ -65,6 +65,40 @@
 			q.rec    = new q._deps.rec ( q );
 			q.fls    = new q._deps.fls ( q );
 
+			window.isDirty = false;
+			q.listenFor('DidStateChange', function() {
+				window.isDirty = true;
+			});
+			q.listenFor('StateClearAll', function() {
+				window.isDirty = false;
+			});
+
+			q.listenFor('RequestSaveProject', function() {
+				if (!q.engine.is_ready) return;
+				
+				var buffer = q.engine.wavesurfer.backend.buffer;
+				var channels = [];
+				for (var i = 0; i < buffer.numberOfChannels; i++) {
+					channels.push(Array.from(buffer.getChannelData(i)));
+				}
+				
+				var project = {
+					name: "RECwerk Project",
+					version: "1.0",
+					sampleRate: buffer.sampleRate,
+					channels: channels,
+					timestamp: new Date().getTime()
+				};
+				
+				var blob = new Blob([JSON.stringify(project)], {type: "application/json"});
+				var url = URL.createObjectURL(blob);
+				var a = document.createElement("a");
+				a.href = url;
+				a.download = "project.recwerk";
+				a.click();
+				window.isDirty = false;
+			});
+
 			if (w.location.href.split('local=')[1]) {
 				var sess = w.location.href.split('local=')[1];
 

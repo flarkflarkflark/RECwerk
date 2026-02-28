@@ -1,25 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>AudioMass - About</title>
+	<title>RECwerk - About</title>
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>  
 
-	<meta name="description" content="AudioMass is a free full-featured web-based audio &amp; waveform editing tool"/>
-	<meta property="og:image" content="https://audiomass.co/icon.jpg"/>
-	<meta property="og:title" content="AudioMass">
-	<meta property="og:url" content="https://audiomass.co/">
-	<meta property="og:description" content="AudioMass is a free full-featured web-based audio &amp; waveform editing tool">
-	<meta name="keywords" content="AudioMass, WebAudio, WaveForm, audio editing, free audio editing, audio tool, waveform editor, sound editor, open source">
-	<link href="/ico.ico" rel="shortcut icon">
+	<meta name="description" content="RECwerk is a powerful native desktop audio and waveform editing tool, based on the AudioMass engine."/>
+	<meta property="og:image" content="logo.svg"/>
+	<meta property="og:title" content="RECwerk">
+	<meta property="og:description" content="RECwerk - Native Desktop Audio Editor">
+	<meta name="keywords" content="RECwerk, AudioMass, Audio Editor, DAW, Waveform, Linux, Windows, Mac">
+	<link href="ico.png" rel="shortcut icon">
 
 <style>
 	body{
 		padding:0;margin:0;
 		font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-		color:rgb(5, 10, 5);
-		background:#fefefe
+		color:#eee;
+		background:#1B2B33;
 	}
 	#w{
 		width: 90%;
@@ -34,288 +33,109 @@
 	p{
 		line-height:21px;
 		font-size:16px;
-		margin-bottom:1.2em
+		margin-bottom:1.2em;
+        color: #ccd;
 	}
 
-	h1{
-		font-size: 26px;
-		margin-top:35px
+	h1, h3{
+		color: #FF0000;
 	}
 
 	h5{
+		font-size:1.2em;
+		margin-bottom:10px;
+        color: #99FF00;
+	}
+
+	ul {
+		padding:0;
+		list-style:none;
+        margin-bottom: 20px;
+	}
+
+	li {
+		padding:0 0 5px 0;
+		color:#fff;
 		font-size:1em;
-		margin-bottom:0
 	}
-
-	.top{
-		max-width:100%;
-		outline:0;
-		display:inline-block
-	}
-
-	.mid{
-		max-width:504px;
-		width: 90%;
-		outline:0;
-		margin-bottom:16px;
-		display:inline-block
-	}
-
-	.nomarg{
-		margin-bottom:0
-	}
+    
+    li:before {
+        content: "• ";
+        color: #99FF00;
+    }
 
 	pre {
 	    padding:12px 16px;
 	    display:inline-block;
 	    border-radius:6px;
-	    background:#e1f3e9;
-	    text-shadow:0 1px #fff;
-	    border-bottom:1px solid #aaa;
+	    background:#121e24;
+	    color: #99FF00;
+	    border-bottom:1px solid #335566;
 	    max-width:90%;
-	    overflow:scroll
-	}
-
-	ul {
-		padding:0;
-		list-style:none
-	}
-
-	li {
-		padding:0 0 3px 0;
-		color:#333;
-		font-size:0.92em
+	    overflow:auto;
+        font-family: monospace;
 	}
 
 	video {
 		max-width:660px;
 		width:90%;
+        border: 1px solid #335566;
 	}
 
-	::-moz-selection { background: #080808; color:#fff; text-shadow:none }
-	::selection { background: #080808;  color:#fff; text-shadow:none }
+	::-moz-selection { background: #FF0000; color:#fff; text-shadow:none }
+	::selection { background: #FF0000;  color:#fff; text-shadow:none }
+    
+    a { color: #99FF00; text-decoration: none; }
+    a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
 <div id="w">
 
-
 <div>
-<h1>Introducing AudioMass (<a href="https://audiomass.co" target="_blank">https://audiomass.co</a>) an open-source web based audio and waveform editing tool.</h1>
+<h1>Introducing RECwerk</h1>
+<p><strong>RECwerk</strong> is a powerful native desktop application designed for professional audio and waveform editing. It provides a fast, responsive interface inspired by classic Digital Audio Workstations like Syntrillium Cool Edit Pro.</p>
 
+<p>This project is a native evolution of the brilliant <strong>AudioMass</strong> engine, originally created by <a href="https://github.com/pkalogiros" target="_blank">Pantelis Kalogiros</a>. While the core engine remains a testament to his web-audio expertise, RECwerk has been modernized and "wrapped" for Linux, Windows, and Mac to provide low-latency audio support and deeper hardware integration.</p>
 
-<img class="top" src="/about/audiomass_top.jpg" />
-
-
-<p>AudioMass lets you record, or use your existing audio tracks, and modify them by trimming, cutting, pasting or applying a plethora of effects, from compression and paragraphic equalizers to reverb, delay and distortion fx. AudioMass also supports more than 20 hotkeys combinations and a dynamic responsive interface to ensure ease of use and that your producivity remains high.
-it is written solely in plain old-school javascript, weights approximately 65kb and has no backend or framework dependencies.</p>
-
-<img class="mid" src="/about/audiomass_support.jpg" />
-<p>It also has very good browser and device support.</p>
-
-
-<h5>:: Feature List ::</h5>
-
+<h5>:: Native Feature List ::</h5>
 <ul>
-<li>Loading Audio, navigating the waveform, zoom and pan</li>
-<li>Visualization of frequency levels</li>
-<li>Peak and distortion signaling</li>
-<li>Cutting/Pasting/Trimming parts of the audio</li>
-<li>Inverting and Reversing Audio</li>
-<li>Exporting to mp3</li>
-<li>Modifying volume levels</li>
-<li>Fade In/Out</li>
-<li>Compressor</li>
-<li>Normalization</li>
-<li>Reverb</li>
-<li>Delay</li>
-<li>Distortion</li>
-<li>Pitch Shift</li>
-<li>Keeps track of states so you can undo mistakes</li>
-<li>Offline support!</li>
+<li><strong>Native Audio Engine</strong>: High-performance stereo and mono support.</li>
+<li><strong>Real-time Monitoring</strong>: Hear your input during recording with up to 200% volume boost.</li>
+<li><strong>Hardware Selection</strong>: Choose specific Input/Output devices for complex multi-card setups.</li>
+<li><strong>Multiformat support</strong>: Native handling of WAV, MP3, OGG, FLAC, and AIFF.</li>
+<li><strong>Advanced DSP</strong>: Real-time preview for AI Noise Reduction, Paragraphic EQ, Compression, and Reverb.</li>
+<li><strong>Syntrillium Aesthetic</strong>: A classic "Cooler" look-and-feel for the modern era.</li>
+<li><strong>Non-destructive editing</strong>: Full undo/redo history for all operations.</li>
 </ul>
-
-<p>And all this, in only 83kb of JS!</p>
 </div>
-
 
 <div>
 <h3>Getting Started</h3>
-
-
-<p>To get started, drag and drop an audio file, or try the included sample.<br />
-Once the file is loaded and you can view the waveform, zoom in, pan around, or select a region.</p>
-
-<img class="mid" src="/about/audiomass_2.jpg" />
-
+<p>To get started, simply drag and drop an audio file into the workspace. Once the file is loaded, you can view the waveform, zoom in, pan around, and select regions for editing.</p>
 
 <h3>Recording Audio</h3>
+<p>To record audio, press the <strong>Recording button</strong> or use the <strong>[R]</strong> key. You can adjust your recording settings (channels, sample rate, monitoring) in the recording modal.</p>
 
-<p>To record audio, simply press the Recording button, or the <i>[R]</i> key.</p>
+<h3>The Story & Credits</h3>
+<p>The soul of RECwerk lies in the <strong>AudioMass</strong> project, written by Pantelis Kalogiros in 2018. He shared it as an open-source tool to show how far web-audio technologies could go without complex frameworks. His philosophy was simple: "be fast and get the job done."</p>
 
-<img class="mid" src="/about/audiomass_3.jpg" />
-
-
-<h3>Exporting to mp3</h3>
-
-<p>In order to export back to mp3, click on 'File', then 'Export to mp3', and follow the modal's instructions.</p>
-
-<img class="mid" src="/about/audiomass_4.jpg" />
-
+<p>The <strong>flarkAUDIO</strong> team recognized the potential of this engine and decided to take it "out of the browser tab" and onto the desktop. By implementing native wrappers, improving recording capabilities (Stereo/Monitoring), and skinning it with the classic Syntrillium vibe, <strong>RECwerk</strong> was born—honoring its web-based roots while delivering a true desktop DAW experience.</p>
 </div>
 
-
-<hr />
-
+<hr style="border: 0; border-top: 1px solid #335566; margin: 40px 0;" />
 
 <div>
-<h3>The story behind AudioMass. And a short rant on web interfaces.</h3>
+<h3>Performance Considerations (The Technical Rant)</h3>
+<p>Working with the Web Audio API in a native context brings its own challenges. As the original author noted, iterating over multiple long arrays can eventually trigger garbage collection, leading to "crackling."</p>
 
-<p>I wrote AudioMass back in June 2018 and it stayed dormant on my hard disk until I decided to share it with the world today (July 13th, 19 -- but you might be seeing this in 2020. Hi!!).
-It started as a personal small tool for quick visualization of waveforms. Later I added the ability to cut/copy/paste as well as fade in and out. And soon after good 'ol feature creep and perfectionism took over! Soon after, it turned to a challenge to see how close to a full-featured waveform editor it can get, whilst maintaining acceptable performance and small filesize.</p>
+<p>In RECwerk, we address this by moving heavy operations—such as filter processing—to background threads (Web Workers). We are also working towards a pure WASM implementation for signal modification to outperform traditional JS processing, ensuring that even large audio files can be handled without freezing the UI.</p>
 
-<p>In general I am a big fan of the interfaces of DAWs <i>(Digital Audio Workstations)</i>, they are extremely, complex, intricate, versatile, and they manage to remain visually pleasant even through their infinite options and knobs. Many times I feel the web has taken a very wrong turn, as amazing interfaces such as...
-
-<p class="nomarg">Sonar</p>
-<img class="mid" src="/about/sonar.jpg" />
-
-<br />
-<p class="nomarg">Fruity loops</p>
-<img class="mid" src="/about/fruity.png" />
-
-<br />
-
-<p>Existed for more than 10-15 years now, while we are struggling with animating some rectangles for 60fps... So for AudioMass I wanted to try and make a fast and performant interface. Drawing inspiration from the examples I mentioned earlier rather than the tradiional web development practices. This is my unconvincing but truthfull excuse as to why the code is ugly; it is focused on being fast and getting the job done, with little regard on structure.</p>
-
-</div>
-
-<hr />
-
-<div>
-
-<h3>Building the interface</h3>
-
-<p>Let's say we have a <i>"PLAY"</i> button and when we press it the track begins to play. I suppose we would want the button's color and state to reflect that the track is now playing. So naively we would do something like;</p>
-
-
-<pre><code>btn.onclick = function () {
-	this.classList.add ('active');
-};</code></pre>
-
-<p>But what happens if we have a hotkey that triggers the same action? Let's say we press <i>[SPACEBAR]</i> and the track begins to play. Do we modify that button's class in the spacebar's handler?</p>
-
-<pre><code>document.onkeypress = function ( e ) { 
-  if ( e.keyCode === 32) {
-       e.preventDefault ();
-
-       document.querySelector ('.playbtn').classList.add ('active');
-  }
-};</code></pre>
-
-<p>And what happens, if there are 2 buttons, or one gets dynamically removed? Do we do selectAll and iterate? Hmmm...<br />
-And if the track is playing and we hit <i>[SPACEBAR]</i> or the play button again, we need to stop playing. What do we do then? You can see how this becomes messy very quickly as everything gets very tighlty coupled together in a big dependency ball.</p>
-
-
-
-<p>Introducing the observer pattern. Actions are represented by events. So the above logic and be expressed as;</p>
-
-
-<pre><code>btn.onclick = function () {
-	FireEvent ('RequestTogglePlay');
-};
-
-On ('WillPlay', function () {
-	btn.classList.add ('active');
-});
-
-On ('WillStop', function () {
-	btn.classList.remove ('active');
-});
-
-
-
-document.onkeypress = function ( e ) {
-  if ( e.keyCode === 32) {
-       e.preventDefault ();
-
-       FireEvent ('RequestTogglePlay');
-  }
-};
-
-
-
-On ('RequestTogglePlay', function () {
-	if (track.is_playing) {
-		FireEvent ('WillStop');
-		track.stop ();
-	}
-	else {
-		FireEvent ('WillPlay');
-		track.play ();
-	}
-});
-
-track.onPlayStart = function () {
-	FireEvent ('DidPlay');
-};
-track.onPlayStop = function () {
-	FireEvent ('DidStop');
-};
-</code></pre>
-
-<p>Now this is completely decoupled and dependency free! The button will set its state according to the events it receives, and both the button and the spacebar key rely on the same mechanisms.
-You may notice the vocabulary we are using. <i>"Request"</i>, <i>"Will"</i> and <i>"Did"</i>. These are arbitrarilly chosen to impose some extra structure.<br /> <i>"Request"</i> denotes intent to perform an action, it is not guaranteed that the action will execute as there might be conditions preventing it (eg unitialized or still loading objects). <i>"Will"</i> means that the conditions passed and we are attempting to perform the action. And <i>"Did"</i> means that the action just got performed.<br />
-It might be a bit too verbose, but it worked very well for structuring AudioMass's interface.</p>
-</div>
-
-<hr />
-
-<div>
-<h3>Dockable UI</h3>
-
-<p>One thing I love about DAW interfaces, is that every window can be pulled out of the main host. I fondly remember having 3 screens full of VST plugins. So can we do the same in the browser?</p>
-
-
-<video src="/about/dock_ui.mp4" autoplay muted playsinline controls loop></video>
-
-
-<p>Yes! And it is using some of the oldest tricks in the book. Essentially we create a pop-up window with <i>window.open</i> and just pass buffers to its <i>documentWindow</i> object. Surprisingly it is quite performant on all browsers except IE Edge. I believe they are serializing in ascii or base64 every packet or something. Also Chrome has an interesting bug where you can't pass more than 512 byte buffers.</p>
-
-<p>So for the undocked window, we call <i>window.open</i>. But how do we make it work when it is docked? It would be quite cumbersome to write the same functionality twice, once as a standalone page, and once as an in-page script. Luckily we can avoid that completely, and re-use the same page by using iframes.</p>
-
-<p>The only difference is that the undocked version uses <i>window.opener</i> to refference its parent, whereas the iframe uses <i>window.parent</i>.</p>
-
-</div>
-
-
-<hr />
-
-<div>
-<h3>Future work and performance considerations</h3>
-
-<p>The next big feature that is planned, is multitrack support. The ability to mix tracks and different sounds is currently lacking and its usefulness as it stands is limited.</p>
-
-<hr />
-
-<p>There is also a lot of room for improvement in almost all aspects.</p>
-
-<p>First of all we can further reduce the filesize by around 20kb by removing the library we are using for rendering the waveform. We use only a fraction of its functionality so there is no reason to include it all.</p>
-
-<p>We can also optimize a lot the rendering of the waveform. I heavily modified the library used to compute and draw only the visible range. However it is still clearing and re-drawing all of the canvas at each frame. We can take advantage of 2d Context's translate calls, and shift the canvas around instead of redrawing all of the pixels.</p>
-
-<p>We can also move some operations to a background thread, such as the filters processing so that the UI does not freeze when applying a long chain of effects.</p>
-
-<br />
-
-
-<p>However, the biggest issue I encountered, is the Web Audio API itself. Every operation results in iterating over multiple long arrays per frame. Eventually the garbage collector fires and crackling is introduced. Only way to go around this is to use a small fftSize, but then the frequency range we have to work with is very narrow. Perhaps a pure WASM implementation would outperform trying to modify audio signals with JS. Only one way to find out I guess :) </p>
-<p>Additionally, <i>decodeAudioData</i> provides no progress callback, and no way of cancelling it. So if you attempt to load a huge audio file, you will waste resources until it gets processed. There is no way around this currently and it can get annoying if you push a big file by mistake.</p>
-
+<p><em>RECwerk is a free, open-source project. We stand on the shoulders of giants.</em></p>
 </div>
 
 <br /><br /><br />
 
 </div>
 </body>
-
 </html>

@@ -410,6 +410,13 @@
 			  }
 
 			  config.setup && config.setup ( q );
+              
+              // Auto-start preview if a preview button exists in the toolbar
+              setTimeout(function() {
+                  if (q.els && q.els.toolbar && q.els.toolbar[1]) {
+                      q.els.toolbar[1].click();
+                  }
+              }, 250);
 			}
 		});
 	

@@ -18,20 +18,21 @@ setTimeout(function () {
 				body_str2 = 'Check out the codebase on <a href="https://github.com/pkalogiros/audiomass" target="_blank">Github</a><br/><br/>'; // checkout the code on github
 			}
 
-			// Welcome to AudioMass,
+			// Welcome to RECwerk,
 			var md = new PKSimpleModal({
-				title: '<font style="font-size:15px">Welcome to AudioMass</font>',
+				title: '<font style="font-size:15px">Welcome to RECwerk</font>',
 				ondestroy: function( q ) {
 					PKAE.ui.InteractionHandler.on = false;
 					PKAE.ui.KeyHandler.removeCallback ('modalTemp');
 			},
 			body:'<div style="overflow:auto;-webkit-overflow-scrolling:touch;max-width:580px;width:calc(100vw - 40px);max-height:calc(100vh - 340px);min-height:110px;font-size:13px; color:#95c6c6;padding-top:7px;">'+
-				'AudioMass is a free, open source, web-based Audio and Waveform Editor.<br />It runs entirely in the browser with no backend and no plugins required!'+
+                '<img src="logo.svg" style="width:100%; max-width:400px; margin: 0 auto 20px auto; display: block;" />' +
+				'<strong>RECwerk</strong> is a native desktop evolution of the <a href="https://github.com/pkalogiros/audiomass" target="_blank" style="color:#99FF00">AudioMass</a> engine by Pantelis Kalogiros.<br /><br />'+
+                'It runs natively on your system with low-latency audio, real-time monitoring, and a classic Syntrillium-inspired interface.'+
 				'<br/><br/><br/>'+
 				body_str+
-				'You can load any type of audio your browser supports and perform operations such as fade in, cut, trim, change the volume, '+
-				'and apply a plethora of audio effects.<br/><br/>'+
-				body_str2+
+				'You can load any common audio format and perform operations such as fade in, cut, trim, change the volume, '+
+				'and apply a plethora of real-time audio effects.<br/><br/>'+
 				'</div>',
 			setup:function( q ) {
 					PKAE.ui.InteractionHandler.checkAndSet ('modal');

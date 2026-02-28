@@ -205,7 +205,7 @@
 				'<div class="pk_row" style="border:none;padding:0">',
 				// '<a style="float:left;margin:0" class="pk_modal_a_bottom">Volume Graph</a></div>',
 
-			  setup:function( q ) {
+			  setup: function( q ) { app.fireEvent ("RequestPause");
 				  var range = q.el_body.getElementsByTagName ('input')[0];
 				  var span = q.el_body.getElementsByTagName  ('span')[0];
 				  var graph_btn = q.el_body.getElementsByTagName  ('a')[0];
@@ -219,13 +219,16 @@
 				  //	auto = new PKAudioEditor._deps.FxAUT (app, q);
 				  //};
 
-				  app.fireEvent ('RequestPause');
+				  
 				  app.ui.InteractionHandler.checkAndSet (modal_name);
 				  app.ui.KeyHandler.addCallback (modal_esc_key, function ( e ) {
 					if (!app.ui.InteractionHandler.check (modal_name)) return ;
 
 				    q.Destroy ();
 				  }, [27]);
+                  
+                  // Auto-start preview
+                  
 			  }
 			}, app);
 			x.Show();
@@ -274,7 +277,7 @@
 			  body:'<div class="pk_row" style="border:none"><label>Playback Rate</label>' + 
 				'<input type="range" class="pk_horiz" min="0.2" max="2.0" step="0.05" value="1.0" />'+
 				'<span class="pk_val">1.0</span></div>',
-			  setup:function( q ) {
+			  setup: function( q ) { app.fireEvent ("RequestPause");
 				  var range = q.el_body.getElementsByTagName('input')[0];
 				  var span = q.el_body.getElementsByTagName('span')[0];
 
@@ -283,7 +286,7 @@
 					app.fireEvent ('RequestActionFX_UPDATE_PREVIEW', range.value/1);
 				  };
 				  
-				  app.fireEvent ('RequestPause');
+				  
 				  app.ui.InteractionHandler.checkAndSet (modal_name);
 				   
 				  app.ui.KeyHandler.addCallback (modal_esc_key, function ( e ) {
@@ -341,7 +344,7 @@
 			  body:'<div class="pk_row" style="border:none"><label>Playback Rate</label>' + 
 				'<input type="range" class="pk_horiz" min="0.2" max="2.0" step="0.05" value="1.0" />'+
 				'<span class="pk_val">1.0</span></div>',
-			  setup:function( q ) {
+			  setup: function( q ) { app.fireEvent ("RequestPause");
 				  var range = q.el_body.getElementsByTagName('input')[0];
 				  var span = q.el_body.getElementsByTagName('span')[0];
 
@@ -350,7 +353,7 @@
 					app.fireEvent ('RequestActionFX_UPDATE_PREVIEW', range.value/1);
 				  };
 				  
-				  app.fireEvent ('RequestPause');
+				  
 				  app.ui.InteractionHandler.checkAndSet (modal_name);
 				   
 				  app.ui.KeyHandler.addCallback (modal_esc_key, function ( e ) {
@@ -440,7 +443,7 @@
 						'<div class="pk_row"><input type="checkbox" class="pk_check pk_c_ms" id="xms" checked name="makeStereo">'+
 						'<label for="xms">Make Stereo</label></div>' + 
 					'</div>',
-			  setup:function( q ) {
+			  setup: function( q ) { app.fireEvent ("RequestPause");
 			  	  var main = null;
 				  var num = PKAudioEditor.engine.wavesurfer.backend.buffer.numberOfChannels;
 				  if (num === 2)
@@ -487,7 +490,7 @@
 
 				  // --
 
-				  app.fireEvent ('RequestPause');
+				  
 				  app.ui.InteractionHandler.checkAndSet (modal_name);
 				  app.ui.KeyHandler.addCallback (modal_esc_key, function ( e ) {
 				  	if (!app.ui.InteractionHandler.check (modal_name)) return ;
@@ -534,7 +537,7 @@
 				'<div class="pk_row"><label>Silence in seconds</label>'+
 				'<input type="range" min="0.0" max="30.0" class="pk_horiz" step="0.01" value="5.0" />'+
 				'<span class="pk_val">5s</span></div>',
-			  setup:function( q ) {
+			  setup: function( q ) { app.fireEvent ("RequestPause");
 					var cursor_pos_el = q.el_body.getElementsByClassName('pkcdpk')[0];
 					cursor_pos_el.innerHTML = PKAudioEditor.engine.wavesurfer.getCurrentTime().toFixed(2) + 's';
 
@@ -642,7 +645,7 @@
 				'<input class="pk_horiz" type="range" min="0.0" max="1.0" step="0.001" value="0.25" />'+
 				'<span class="pk_val">0.25</span></div>',
 				//'<a style="float:left;margin:0" class="pk_modal_a_bottom">Volume Graph</a></div>',
-			  setup:function( q ) {
+			  setup: function( q ) { app.fireEvent ("RequestPause");
 				var inputs = q.el_body.getElementsByTagName ('input');
 				for (var i = 0; i < inputs.length; ++i)
 				{
@@ -664,7 +667,7 @@
 					app.fireEvent ('RequestActionFX_UPDATE_PREVIEW', val);
 				}
 
-				app.fireEvent ('RequestPause');
+				
 				app.ui.InteractionHandler.checkAndSet (modal_name);
 				app.ui.KeyHandler.addCallback (modal_esc_key, function ( e ) {
 					if (!app.ui.InteractionHandler.check (modal_name)) return ;
@@ -706,7 +709,7 @@
 				'<div class="pk_row" style="border:none"><label>Normalize to</label>'+
 				'<input type="range" min="0.0" max="2.0" class="pk_horiz" step="0.01" value="1.0" />'+
 				'<span class="pk_val">100%</span></div>',
-			  setup:function( q ) {
+			  setup: function( q ) { app.fireEvent ("RequestPause");
 				  var range = q.el_body.getElementsByClassName('pk_horiz')[0];
 				  var span = q.el_body.getElementsByClassName('pk_val')[0];
 
@@ -714,7 +717,7 @@
 					span.innerHTML = (((range.value/1)*100) >> 0) + '%';
 				  };
 
-				  app.fireEvent ('RequestPause');
+				  
 				  app.ui.InteractionHandler.checkAndSet ('modal');
 					app.ui.KeyHandler.addCallback ('modalTemp', function ( e ) {
 						q.Destroy ();
@@ -935,7 +938,7 @@
 			  	bands_str+
 				'<div style="clear:both;"></div></div>',
 				//'<a style="float:left;margin:0" class="pk_modal_a_bottom">Volume Graph</a></div>',
-			  setup:function( q ) {
+			  setup: function( q ) { app.fireEvent ("RequestPause");
 					var ranges = q.el_body.getElementsByTagName('input');
 					var len = ranges.length;
 
@@ -958,7 +961,7 @@
 						};
 					}
 
-					app.fireEvent ('RequestPause');
+					
 					app.ui.InteractionHandler.checkAndSet (modal_name);
 					app.ui.KeyHandler.addCallback (modal_esc_key, function ( e ) {
 						if (!app.ui.InteractionHandler.check (modal_name)) return ;
@@ -1019,7 +1022,7 @@
 					}
 					return (val);
 				},
-			  setup:function( q ) {
+			  setup: function( q ) { app.fireEvent ("RequestPause");
 				  var ranges = q.el_body.getElementsByClassName('pk_horiz');
 				  
 				  ranges[0].oninput = function() {
@@ -1039,7 +1042,7 @@
 				  };
 
 
-				  app.fireEvent ('RequestPause');
+				  
 				  app.ui.InteractionHandler.checkAndSet ('modal');
 					app.ui.KeyHandler.addCallback ('modalTemp', function ( e ) {
 						q.Destroy ();
@@ -1120,7 +1123,7 @@
 				'<input class="pk_horiz" type="range" min="0.0" max="1.0" step="0.01" value="0.4" />'+
 				'<span class="pk_val">0.4</span></div>',
 				//'<a style="float:left;margin:0" class="pk_modal_a_bottom">Volume Graph</a></div>',
-			  setup:function( q ) {
+			  setup: function( q ) { app.fireEvent ("RequestPause");
 				var inputs = q.el_body.getElementsByTagName ('input');
 				for (var i = 0; i < inputs.length; ++i)
 				{
@@ -1142,7 +1145,7 @@
 					app.fireEvent ('RequestActionFX_UPDATE_PREVIEW', val);
 				}
 
-				app.fireEvent ('RequestPause');
+				
 				app.ui.InteractionHandler.checkAndSet (modal_name);
 				app.ui.KeyHandler.addCallback (modal_esc_key, function ( e ) {
 					if (!app.ui.InteractionHandler.check (modal_name)) return ;
@@ -1203,7 +1206,7 @@
 				'<span class="pk_val">0.5</span></div>',
 				// '<a style="float:left;margin:0" class="pk_modal_a_bottom">Volume Graph</a></div>',
 
-			  setup:function( q ) {
+			  setup: function( q ) { app.fireEvent ("RequestPause");
 				var inputs = q.el_body.getElementsByTagName ('input');
 				for (var i = 0; i < inputs.length; ++i)
 				{
@@ -1225,7 +1228,7 @@
 					app.fireEvent ('RequestActionFX_UPDATE_PREVIEW', val);
 				}
 
-				app.fireEvent ('RequestPause');
+				
 				app.ui.InteractionHandler.checkAndSet (modal_name);
 				app.ui.KeyHandler.addCallback (modal_esc_key, function ( e ) {
 					if (!app.ui.InteractionHandler.check (modal_name)) return ;
@@ -1295,7 +1298,7 @@
 				'<div class="pk_row"><label class="pk_line">Wet</label>' + 
 				'<input class="pk_horiz" type="range" min="0.0" max="1.0" step="0.01" value="0.6" />'+
 				'<span class="pk_val">0.6</span></div>',
-			  setup:function( q ) {
+			  setup: function( q ) { app.fireEvent ("RequestPause");
 				var inputs = q.el_body.getElementsByTagName ('input');
 				for (var i = 0; i < inputs.length; ++i)
 				{
@@ -1318,7 +1321,7 @@
 					app.fireEvent ('RequestActionFX_UPDATE_PREVIEW', val);
 				}
 
-				app.fireEvent ('RequestPause');
+				
 				app.ui.InteractionHandler.checkAndSet (modal_name);
 				app.ui.KeyHandler.addCallback (modal_esc_key, function ( e ) {
 					if (!app.ui.InteractionHandler.check (modal_name)) return ;
@@ -1381,7 +1384,7 @@
 				  ],
 				  body:'<input type="file" accept="audio/*" />'+
 				  	'<div class="pk_row pk_ttx">Choose file to view audio metatags!</div>',
-				  setup:function( q ) {
+				  setup: function( q ) { app.fireEvent ("RequestPause");
 				  		var input  = q.el_body.getElementsByTagName ('input')[0];
 				  		var txt_el = q.el_body.getElementsByClassName ('pk_ttx')[0];
 
@@ -1588,8 +1591,8 @@
 					  ],
 					  body:'<label for="k07">Preset Name</label>' + 
 						'<input style="min-width:340px" maxlength="16" placeholder="Please type a name, eg: My Preset" ' + default_txt + ' class="pk_txt" type="text" id="k07" />',
-					  setup:function( q ) {
-					  	  	// app.fireEvent ('RequestPause');
+					  setup: function( q ) { app.fireEvent ("RequestPause");
+					  	  	// 
 
 						  	app.ui.InteractionHandler.forceSet (modal_id);
 
@@ -1831,7 +1834,7 @@
 							"location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=600,height=188" + extra);
 
 					if (!wnd) {
-						OneUp ('Please allow pop-ups for AudioMass!', 3600, 'pk_r');
+						OneUp ('Please allow pop-ups for RECwerk!', 3600, 'pk_r');
 						return ;
 					}
 
@@ -1920,7 +1923,167 @@
 		});
 
 		// ----
+		app.listenFor ('RequestFXUI_FadeIn', function () {
+			app.fireEvent ('RequestSelect', 1);
+			var x = new PKAudioFXModal({
+				id: 'fadein',
+				title: 'Fade In',
+				preview: function ( q ) {
+					app.fireEvent ('RequestActionFX_PREVIEW_FadeIn');
+				},
+				buttons: [
+					{
+						title: 'Apply',
+						clss: 'pk_modal_a_accpt',
+						callback: function( q ) {
+							app.fireEvent ('RequestActionFX_FadeIn');
+							q.Destroy ();
+						}
+					}
+				],
+				body: '<div class="pk_row" style="border:none">Apply a linear fade-in to the selection.</div>',
+				setup: function( q ) { app.fireEvent ("RequestPause");
+					
+					app.ui.InteractionHandler.checkAndSet (modal_name);
+				}
+			}, app);
+			x.Show();
+		});
+
+		app.listenFor ('RequestFXUI_FadeOut', function () {
+			app.fireEvent ('RequestSelect', 1);
+			var x = new PKAudioFXModal({
+				id: 'fadeout',
+				title: 'Fade Out',
+				preview: function ( q ) {
+					app.fireEvent ('RequestActionFX_PREVIEW_FadeOut');
+				},
+				buttons: [
+					{
+						title: 'Apply',
+						clss: 'pk_modal_a_accpt',
+						callback: function( q ) {
+							app.fireEvent ('RequestActionFX_FadeOut');
+							q.Destroy ();
+						}
+					}
+				],
+				body: '<div class="pk_row" style="border:none">Apply a linear fade-out to the selection.</div>',
+				setup: function( q ) { app.fireEvent ("RequestPause");
+					
+					app.ui.InteractionHandler.checkAndSet (modal_name);
+				}
+			}, app);
+			x.Show();
+		});
+
+		app.listenFor ('RequestFXUI_NoiseRNN', function () {
+			app.fireEvent ('RequestSelect', 1);
+			var x = new PKAudioFXModal({
+				id: 'noisernn',
+				title: 'Noise Reduction (Voice)',
+				preview: function ( q ) {
+					app.fireEvent ('RequestActionFX_PREVIEW_NoiseRNN');
+				},
+				buttons: [
+					{
+						title: 'Apply',
+						clss: 'pk_modal_a_accpt',
+						callback: function( q ) {
+							app.fireEvent ('RequestActionFX_NoiseRNN');
+							q.Destroy ();
+						}
+					}
+				],
+				body: '<div class="pk_row" style="border:none">Apply AI-based noise reduction optimized for voice.</div>',
+				setup: function( q ) { app.fireEvent ("RequestPause");
+					
+					app.ui.InteractionHandler.checkAndSet (modal_name);
+				}
+			}, app);
+			x.Show();
+		});
 	};
+
+		app.listenFor ("RequestActionFXUI_ClickRemoval", function () { 
+			app.fireEvent ("RequestSelect", 1); 
+			var x = new PKAudioFXModal({ 
+				id: "clickremoval", 
+				title: "Click Removal (Vinyl Restoration)", 
+				preview: function ( q ) { 
+					app.fireEvent ("RequestActionFX_PREVIEW_ClickRemoval", { threshold: q.el_body.getElementsByTagName("input")[0].value/1 }); 
+				}, 
+				buttons: [{ title: "Apply", clss: "pk_modal_a_accpt", callback: function( q ) { app.fireEvent ("RequestActionFX_ClickRemoval", { threshold: q.el_body.getElementsByTagName("input")[0].value/1 }); q.Destroy (); } }], 
+				body: "<div class=\"pk_row\"><label>Threshold (Sensitivity)</label><input type=\"range\" min=\"0.01\" max=\"1.0\" step=\"0.01\" value=\"0.3\" /><span class=\"pk_val\">0.3</span></div>", 
+				setup: function( q ) {  
+                    app.fireEvent ("RequestPause"); 
+                    var input = q.el_body.getElementsByTagName("input")[0]; 
+                    input.oninput = function() { this.nextSibling.innerHTML = this.value; app.fireEvent("RequestActionFX_UPDATE_PREVIEW", { threshold: this.value/1 }); }; 
+                } 
+			}, app); 
+			x.Show(); 
+		});
+
+		app.listenFor ("RequestActionFXUI_Chorus", function () { 
+			app.fireEvent ("RequestSelect", 1); 
+			var x = new PKAudioFXModal({ 
+				id: "chorus", 
+				title: "Chorus / Flanger", 
+				preview: function ( q ) { 
+					app.fireEvent ("RequestActionFX_PREVIEW_Chorus", { rate: q.el_body.getElementsByTagName("input")[0].value/1, depth: q.el_body.getElementsByTagName("input")[1].value/1 }); 
+				}, 
+				buttons: [{ title: "Apply", clss: "pk_modal_a_accpt", callback: function( q ) { app.fireEvent ("RequestActionFX_Chorus", { rate: q.el_body.getElementsByTagName("input")[0].value/1, depth: q.el_body.getElementsByTagName("input")[1].value/1 }); q.Destroy (); } }], 
+				body: "<div class=\"pk_row\"><label>Rate (Hz)</label><input type=\"range\" min=\"0.1\" max=\"10\" step=\"0.1\" value=\"1.5\" /><span class=\"pk_val\">1.5Hz</span></div>" + 
+				      "<div class=\"pk_row\"><label>Depth</label><input type=\"range\" min=\"0.001\" max=\"0.01\" step=\"0.001\" value=\"0.002\" /><span class=\"pk_val\">0.002</span></div>", 
+				setup: function( q ) { app.fireEvent ("RequestPause");  
+                     
+                    var inputs = q.el_body.getElementsByTagName("input"); 
+                    for (var i=0; i<inputs.length; i++) { inputs[i].oninput = function() { this.nextSibling.innerHTML = this.value; app.fireEvent("RequestActionFX_UPDATE_PREVIEW", { rate: inputs[0].value/1, depth: inputs[1].value/1 }); }; } 
+                } 
+			}, app); 
+			x.Show(); 
+		}); 
+
+		app.listenFor ("RequestActionFXUI_Bitcrusher", function () { 
+			app.fireEvent ("RequestSelect", 1); 
+			var x = new PKAudioFXModal({ 
+				id: "bitcrusher", 
+				title: "Bitcrusher (Lo-Fi)", 
+				preview: function ( q ) { 
+					app.fireEvent ("RequestActionFX_PREVIEW_Bitcrusher", { bits: q.el_body.getElementsByTagName("input")[0].value/1 }); 
+				}, 
+				buttons: [{ title: "Apply", clss: "pk_modal_a_accpt", callback: function( q ) { app.fireEvent ("RequestActionFX_Bitcrusher", { bits: q.el_body.getElementsByTagName("input")[0].value/1 }); q.Destroy (); } }], 
+				body: "<div class=\"pk_row\"><label>Bit Depth</label><input type=\"range\" min=\"1\" max=\"16\" step=\"1\" value=\"8\" /><span class=\"pk_val\">8-bit</span></div>", 
+				setup: function( q ) { app.fireEvent ("RequestPause");  
+                     
+                    var input = q.el_body.getElementsByTagName("input")[0]; 
+                    input.oninput = function() { this.nextSibling.innerHTML = this.value + "-bit"; app.fireEvent("RequestActionFX_UPDATE_PREVIEW", { bits: this.value/1 }); }; 
+                } 
+			}, app); 
+			x.Show(); 
+		}); 
+
+		app.listenFor ("RequestActionFXUI_Filter", function () { 
+			app.fireEvent ("RequestSelect", 1); 
+			var x = new PKAudioFXModal({ 
+				id: "filter", 
+				title: "Filter (High/Low Pass)", 
+				preview: function ( q ) { 
+					app.fireEvent ("RequestActionFX_PREVIEW_Filter", { type: q.el_body.getElementsByTagName("select")[0].value, freq: q.el_body.getElementsByTagName("input")[0].value/1 }); 
+				}, 
+				buttons: [{ title: "Apply", clss: "pk_modal_a_accpt", callback: function( q ) { app.fireEvent ("RequestActionFX_Filter", { type: q.el_body.getElementsByTagName("select")[0].value, freq: q.el_body.getElementsByTagName("input")[0].value/1 }); q.Destroy (); } }], 
+				body: "<div class=\"pk_row\"><label>Type</label><select><option value=\"lowpass\">Low Pass</option><option value=\"highpass\">High Pass</option></select></div>" + 
+				      "<div class=\"pk_row\"><label>Frequency (Hz)</label><input type=\"range\" min=\"20\" max=\"20000\" step=\"10\" value=\"1000\" /><span class=\"pk_val\">1000Hz</span></div>", 
+				setup: function( q ) { app.fireEvent ("RequestPause");  
+                     
+                    var input = q.el_body.getElementsByTagName("input")[0]; 
+                    var select = q.el_body.getElementsByTagName("select")[0]; 
+                    input.oninput = function() { this.nextSibling.innerHTML = this.value + "Hz"; app.fireEvent("RequestActionFX_UPDATE_PREVIEW", { type: select.value, freq: this.value/1 }); }; 
+                    select.onchange = function() { app.fireEvent("RequestActionFX_UPDATE_PREVIEW", { type: this.value, freq: input.value/1 }); }; 
+                } 
+			}, app); 
+			x.Show(); 
+		});
 
 	PKAE._deps.uifx = PKUI_FX;
 

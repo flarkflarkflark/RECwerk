@@ -147,12 +147,17 @@
 		this.LoadFile = function ( e ) {
 			if (e.files.length > 0)
 			{
-				if (e.files[0].type == "audio/mp3"
-					|| e.files[0].type == "audio/wave"
-					|| e.files[0].type == "audio/mpeg"
-					|| e.files[0].type == "audio/aiff"
-					|| e.files[0].type == "audio/flac"
-					|| e.files[0].type == "audio/ogg")
+				var file = e.files[0];
+				var fileName = file.name.toLowerCase();
+				var isAudio = file.type.indexOf('audio') === 0 || 
+							  fileName.endsWith('.mp3') || 
+							  fileName.endsWith('.wav') || 
+							  fileName.endsWith('.ogg') || 
+							  fileName.endsWith('.flac') || 
+							  fileName.endsWith('.aif') || 
+							  fileName.endsWith('.aiff');
+
+				if (isAudio)
 				{
 
 							var func = function () {
@@ -407,7 +412,7 @@
 			}
 
 			if (q.is_ready) return ;
-			q.is_ready = true;
+			q.is_ready = false;
 
 			// dirty hack for default message
 			var dirtymsg = document.getElementsByClassName('pk_tmpMsg');
@@ -507,29 +512,35 @@
 			if (!q.is_ready) return ;
 
 			var skip_seek = false;
+			var region = wavesurfer.regions.list[0];
 
-			if (wavesurfer.regions.list[0])
+			if (region)
 			{
-				if (wavesurfer.regions.list[0].loop)
-					wavesurfer.regions.list[0].loop = false;
-				else
-					wavesurfer.regions.list[0].loop = true;
+				region.loop = !region.loop;
 			}
 			else
 			{
 				skip_seek = true;
-				wavesurfer.regions.add({
-					start:0.01,
-					end:wavesurfer.getDuration() - 0.01,
-					id:'t'
+				region = wavesurfer.regions.add({
+					start: 0.01,
+					end: wavesurfer.getDuration() - 0.01,
+					id: 't',
+					loop: true
 				});
-				wavesurfer.regions.list[0].loop = true;
 			}
 			
-			var will_loop = wavesurfer.regions.list[0].loop;
+			var will_loop = region.loop;
 			app.fireEvent('DidSetLoop', will_loop);
-			if (will_loop && !skip_seek /*&& wavesurfer.isPlaying ()*/) {
-				app.fireEvent ('RequestSeekTo', wavesurfer.regions.list[0].start / wavesurfer.getDuration ());
+			
+			if (will_loop && !skip_seek) {
+				if (wavesurfer.isPlaying()) {
+					var curr = wavesurfer.getCurrentTime();
+					if (curr < region.start || curr > region.end) {
+						app.fireEvent ('RequestSeekTo', region.start / wavesurfer.getDuration ());
+					}
+				} else {
+					app.fireEvent ('RequestSeekTo', region.start / wavesurfer.getDuration ());
+				}
 			}
 		});
 		app.listenFor ('RequestSkipBack', function( val ) {
@@ -929,7 +940,7 @@
 
 			ctx.fillStyle = "#000";
 			ctx.fillRect ( 0, 0, width, height );
-			ctx.fillStyle = '#99c2c6';
+			ctx.fillStyle = '#99FF00';
 			
 			ctx.beginPath ();
 	        ctx.moveTo ( 0, half_height );
@@ -1986,6 +1997,103 @@
             }
         });
 
+		app.listenFor ('RequestActionFX_PREVIEW_FadeIn', function ( val ) {
+			if (!q.is_ready) return ;
+			if (AudioUtils.previewing) {
+				AudioUtils.FXPreviewStop ();
+				app.fireEvent ('DidStopPreview');
+				return ;
+			}
+
+			var region = wavesurfer.regions.list[0];
+			if (!region) {
+				wavesurfer.regions.add({ start:0.00, end:wavesurfer.getDuration(), id:'t' });
+				region = wavesurfer.regions.list[0];
+			}
+			
+			var start = q.TrimTo (region.start, 3);
+			var end = q.TrimTo ((region.end - region.start), 3);
+
+			AudioUtils.FXPreview( start, end, AudioUtils.FXBank.FadeIn() );
+			app.fireEvent ('DidStartPreview');
+		});
+
+		app.listenFor ('RequestActionFX_PREVIEW_FadeOut', function ( val ) {
+			if (!q.is_ready) return ;
+			if (AudioUtils.previewing) {
+				AudioUtils.FXPreviewStop ();
+				app.fireEvent ('DidStopPreview');
+				return ;
+			}
+
+			var region = wavesurfer.regions.list[0];
+			if (!region) {
+				wavesurfer.regions.add({ start:0.00, end:wavesurfer.getDuration(), id:'t' });
+				region = wavesurfer.regions.list[0];
+			}
+			
+			var start = q.TrimTo (region.start, 3);
+			var end = q.TrimTo ((region.end - region.start), 3);
+
+			AudioUtils.FXPreview( start, end, AudioUtils.FXBank.FadeOut() );
+			app.fireEvent ('DidStartPreview');
+		});
+
+        app.listenFor ('RequestActionFX_PREVIEW_NoiseRNN', function () {
+            if (!q.is_ready) return ;
+            if (AudioUtils.previewing) {
+                AudioUtils.FXPreviewStop ();
+                app.fireEvent ('DidStopPreview');
+                return ;
+            }
+
+            var b = function () {
+                var region = wavesurfer.regions.list[0];
+                if (!region) {
+                    wavesurfer.regions.add({ start: 0, end: wavesurfer.getDuration(), id: "t" });
+                    region = wavesurfer.regions.list[0];
+                }
+                var m = q.TrimTo(region.start, 3),
+                    k = q.TrimTo(region.end - region.start, 3);
+                
+                // For previewing Noise RNN, we actually process a copy since it's not a WebAudio node
+                var u = AudioUtils.Copy(m, k);
+                for (var w = 0; w < u.numberOfChannels; w++) {
+                    var x = u.getChannelData(w),
+                        z = wasm_denoise_stream_perf(x);
+                    x.set(z);
+                }
+                
+                // Play the processed buffer
+                var audio_ctx = wavesurfer.backend.ac || getAudioContext();
+                var source = audio_ctx.createBufferSource();
+                source.buffer = u;
+                source.connect(audio_ctx.destination);
+                source.loop = true;
+                source.start(0);
+                
+                // Setup fake preview object to allow stopping
+                AudioUtils.previewing = 2;
+                AudioUtils.PreviewSource = source;
+                app.fireEvent ('DidStartPreview');
+            };
+
+            if (noisernn_load) b();
+            else {
+                var a = document.createElement("script");
+                a.src = "rnn_denoise.js";
+                a.onload = function () {
+                    noisernn_load = !0;
+                    var f = function () {
+                        if (window.Module && window.Module.asm && window.Module.asm.malloc) b();
+                        else setTimeout(f, 350);
+                    };
+                    setTimeout(f, 100);
+                };
+                document.head.appendChild(a);
+            }
+        });
+
 		app.listenFor ('RequestActionFX_FadeIn', function ( val ) {
 			if (!q.is_ready) return ;
 			
@@ -2103,6 +2211,66 @@
 			AudioUtils.FXPreview( start, end, AudioUtils.FXBank.Gain( val ) );
 			
 			app.fireEvent ('DidStartPreview');
+		});
+
+		app.listenFor ('RequestActionFX_PREVIEW_Chorus', function ( val ) {
+			if (!q.is_ready) return ;
+			if (AudioUtils.previewing) { AudioUtils.FXPreviewStop (); app.fireEvent ('DidStopPreview'); return ; }
+			var region = wavesurfer.regions.list[0] || {start:0, end:wavesurfer.getDuration()};
+			AudioUtils.FXPreview( region.start, region.end - region.start, AudioUtils.FXBank.Chorus ( val ) );
+			app.fireEvent ('DidStartPreview');
+		});
+		app.listenFor ('RequestActionFX_PREVIEW_ClickRemoval', function ( val ) {
+			if (!q.is_ready) return ;
+			if (AudioUtils.previewing) { AudioUtils.FXPreviewStop (); app.fireEvent ('DidStopPreview'); return ; }
+			var region = wavesurfer.regions.list[0] || {start:0, end:wavesurfer.getDuration()};
+			AudioUtils.FXPreview( region.start, region.end - region.start, AudioUtils.FXBank.ClickRemoval ( val ) );
+			app.fireEvent ('DidStartPreview');
+		});
+		app.listenFor ('RequestActionFX_ClickRemoval', function ( val ) {
+			if (!q.is_ready) return ;
+			var region = wavesurfer.regions.list[0] || {start:0, end:wavesurfer.getDuration()};
+			app.fireEvent ('StateRequestPush', { desc : 'Apply Click Removal (fx)', meta : [ region.start, region.end - region.start ], data : wavesurfer.backend.buffer });
+			AudioUtils.FX( region.start, region.end - region.start, AudioUtils.FXBank.ClickRemoval ( val ) );
+			OneUp ('Applied Click Removal (fx)');
+		});
+
+		app.listenFor ('RequestActionFX_Chorus', function ( val ) {
+			if (!q.is_ready) return ;
+			var region = wavesurfer.regions.list[0] || {start:0, end:wavesurfer.getDuration()};
+			app.fireEvent ('StateRequestPush', { desc : 'Apply Chorus (fx)', meta : [ region.start, region.end - region.start ], data : wavesurfer.backend.buffer });
+			AudioUtils.FX( region.start, region.end - region.start, AudioUtils.FXBank.Chorus ( val ) );
+			OneUp ('Applied Chorus (fx)');
+		});
+
+		app.listenFor ('RequestActionFX_PREVIEW_Bitcrusher', function ( val ) {
+			if (!q.is_ready) return ;
+			if (AudioUtils.previewing) { AudioUtils.FXPreviewStop (); app.fireEvent ('DidStopPreview'); return ; }
+			var region = wavesurfer.regions.list[0] || {start:0, end:wavesurfer.getDuration()};
+			AudioUtils.FXPreview( region.start, region.end - region.start, AudioUtils.FXBank.Bitcrusher ( val ) );
+			app.fireEvent ('DidStartPreview');
+		});
+		app.listenFor ('RequestActionFX_Bitcrusher', function ( val ) {
+			if (!q.is_ready) return ;
+			var region = wavesurfer.regions.list[0] || {start:0, end:wavesurfer.getDuration()};
+			app.fireEvent ('StateRequestPush', { desc : 'Apply Bitcrusher (fx)', meta : [ region.start, region.end - region.start ], data : wavesurfer.backend.buffer });
+			AudioUtils.FX( region.start, region.end - region.start, AudioUtils.FXBank.Bitcrusher ( val ) );
+			OneUp ('Applied Bitcrusher (fx)');
+		});
+
+		app.listenFor ('RequestActionFX_PREVIEW_Filter', function ( val ) {
+			if (!q.is_ready) return ;
+			if (AudioUtils.previewing) { AudioUtils.FXPreviewStop (); app.fireEvent ('DidStopPreview'); return ; }
+			var region = wavesurfer.regions.list[0] || {start:0, end:wavesurfer.getDuration()};
+			AudioUtils.FXPreview( region.start, region.end - region.start, AudioUtils.FXBank.Filter ( val ) );
+			app.fireEvent ('DidStartPreview');
+		});
+		app.listenFor ('RequestActionFX_Filter', function ( val ) {
+			if (!q.is_ready) return ;
+			var region = wavesurfer.regions.list[0] || {start:0, end:wavesurfer.getDuration()};
+			app.fireEvent ('StateRequestPush', { desc : 'Apply Filter (fx)', meta : [ region.start, region.end - region.start ], data : wavesurfer.backend.buffer });
+			AudioUtils.FX( region.start, region.end - region.start, AudioUtils.FXBank.Filter ( val ) );
+			OneUp ('Applied Filter (fx)');
 		});
 
 		app.listenFor ('RequestActionFX_GAIN', function ( val ) {

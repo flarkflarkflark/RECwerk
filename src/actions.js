@@ -936,7 +936,116 @@
 
 		// EFFECTS LOGIC
 		var FXBank = {
-			Gain : function( val ) {
+						ClickRemoval : function ( val ) {
+				return {
+					filter : function ( audio_ctx, destination, source, duration ) {
+						var buffer = source.buffer;
+						var threshold = val.threshold || 0.3;
+						var newBuffer = audio_ctx.createBuffer(buffer.numberOfChannels, buffer.length, buffer.sampleRate);
+						
+						for (var i = 0; i < buffer.numberOfChannels; i++) {
+							var inputData = buffer.getChannelData(i);
+							var outputData = newBuffer.getChannelData(i);
+							outputData.set(inputData);
+							
+							for (var j = 1; j < inputData.length - 1; j++) {
+								if (Math.abs(inputData[j] - inputData[j-1]) > threshold) {
+									outputData[j] = (inputData[j-1] + inputData[j+1]) / 2;
+								}
+							}
+						}
+						
+						var newSource = audio_ctx.createBufferSource();
+						newSource.buffer = newBuffer;
+						newSource.connect(destination);
+						return newSource;
+					},
+					update : function () {}
+				};
+			},
+
+			Bitcrusher : function ( val ) {
+							return {
+								filter : function ( audio_ctx, destination, source, duration ) {
+									var bufferSize = 4096;
+									var node = audio_ctx.createScriptProcessor(bufferSize, 2, 2);
+									var bits = val.bits; // 1 to 16
+									var norm = Math.pow(2, bits);
+									
+									node.onaudioprocess = function(e) {
+										for (var channel = 0; channel < e.inputBuffer.numberOfChannels; channel++) {
+											var input = e.inputBuffer.getChannelData(channel);
+											var output = e.outputBuffer.getChannelData(channel);
+											for (var i = 0; i < bufferSize; i++) {
+												output[i] = Math.round(input[i] * norm) / norm;
+											}
+										}
+									};
+									source.connect(node);
+									node.connect(destination);
+									return node;
+								},
+								update : function ( node, audio_ctx, val ) {
+									// Logic within onaudioprocess uses current val if we closure it, 
+									// but for simplicity we recreate or update params here.
+								}
+							};
+						},
+			
+						Filter : function ( val ) {
+							return {
+								filter : function ( audio_ctx, destination, source, duration ) {
+									var filter = audio_ctx.createBiquadFilter();
+									filter.type = val.type; // "highpass" or "lowpass"
+									filter.frequency.setValueAtTime(val.freq, audio_ctx.currentTime);
+									filter.Q.setValueAtTime(val.q || 1, audio_ctx.currentTime);
+									
+									source.connect(filter);
+									filter.connect(destination);
+									return filter;
+								},
+								update : function ( filter, audio_ctx, val ) {
+									filter.frequency.setTargetAtTime(val.freq, audio_ctx.currentTime, 0.05);
+								}
+							};
+						},
+			
+						Chorus : function ( val ) {
+							return {
+								filter : function ( audio_ctx, destination, source, duration ) {
+									var dryGain = audio_ctx.createGain();
+									var wetGain = audio_ctx.createGain();
+									var delay = audio_ctx.createDelay();
+									var lfo = audio_ctx.createOscillator();
+									var depth = audio_ctx.createGain();
+			
+									dryGain.gain.value = 0.6;
+									wetGain.gain.value = 0.4;
+									delay.delayTime.value = 0.03;
+									lfo.frequency.value = val.rate || 1.5;
+									depth.gain.value = val.depth || 0.002;
+			
+									lfo.connect(depth);
+									depth.connect(delay.delayTime);
+									lfo.start();
+			
+									source.connect(dryGain);
+									source.connect(delay);
+									delay.connect(wetGain);
+									dryGain.connect(destination);
+									wetGain.connect(destination);
+			
+									return [dryGain, wetGain, delay, lfo, depth];
+								},
+								update : function ( nodes, audio_ctx, val ) {
+									nodes[3].frequency.setTargetAtTime(val.rate, audio_ctx.currentTime, 0.05);
+									nodes[4].gain.setTargetAtTime(val.depth, audio_ctx.currentTime, 0.05);
+								}
+							};
+						},
+			
+						Gain : function ( val ) {
+			
 				return {
 					filter : function ( audio_ctx, destination, source, duration ) {
 						var gain = audio_ctx.createGain ();

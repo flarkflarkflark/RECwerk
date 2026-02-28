@@ -406,6 +406,27 @@
 					},
 
 					{
+						name: 'Save Project (RECwerk)',
+						action: function ( e ) {
+							if (!app.engine.is_ready) return ;
+							app.fireEvent('RequestSaveProject');
+						}
+					},
+
+					{
+						name: 'Exit',
+						action: function ( e ) {
+							if (window.isDirty) {
+								if (confirm("You have unsaved changes. Are you sure you want to exit?")) {
+									window.close();
+								}
+							} else {
+								window.close();
+							}
+						}
+					},
+
+					{
 						name: 'Save Draft Locally',
 						clss: 'pk_inact',
 						action: function ( e ) {
@@ -967,21 +988,21 @@
 					{
 						name:'Fade In',
 						action:function () {
-							app.fireEvent ('RequestActionFX_FadeIn');
+							app.fireEvent ('RequestFXUI_FadeIn');
 						}
 					},
 
 					{
 						name:'Fade Out',
 						action:function () {
-							app.fireEvent ('RequestActionFX_FadeOut');
+							app.fireEvent ('RequestFXUI_FadeOut');
 						}
 					},
 
                     {
                         name: "Noise Reduction (Voice)",
                         action: function () {
-                            app.fireEvent("RequestActionFX_NoiseRNN");
+                            app.fireEvent("RequestFXUI_NoiseRNN");
                         },
                     },
 
@@ -1042,6 +1063,27 @@
 						}
 					},
 
+					{
+						name:'Chorus / Flanger',
+						action:function () {
+							app.fireEvent ('RequestActionFXUI_Chorus');
+						}
+					},
+
+					{
+						name:'Bitcrusher (Lo-Fi)',
+						action:function () {
+							app.fireEvent ('RequestActionFXUI_Bitcrusher');
+						}
+					},
+
+					{
+						name:'Filter (High/Low Pass)',
+						action:function () {
+							app.fireEvent ('RequestActionFXUI_Filter');
+						}
+					},
+
 
 					{
 						name:'Reverb',
@@ -1085,6 +1127,17 @@
 						}
 					}
 					
+				]
+			},
+			{
+				name: 'Restoration',
+				children: [
+					{
+						name: 'Click Removal (Vinyl)',
+						action: function() {
+							app.fireEvent('RequestActionFXUI_ClickRemoval');
+						}
+					}
 				]
 			},
 			{
@@ -1306,7 +1359,7 @@
 						}
 					},
 					// {
-					// 	name   : 'About AudioMass',
+					// 	name   : 'About RECwerk',
 					// 	action : function () {
 					// 		window.open ('/about.html');
 					// 	}
@@ -2890,9 +2943,9 @@
 		selection.className = 'pk_selection';
 		selection.innerHTML = '<div class="pk_sellist">' + 
 			'<span class="pk_title">Selection:</span>' + 
-			'<div><span class="title">Start:</span><span class="s_s pk_dat">-</span></div>' + 
-			'<div><span class="title">End:</span><span class="s_e pk_dat">-</span></div>' + 
-			'<div><span  class="title">Duration:</span><span class="s_d pk_dat">-</span></div>' +
+			'<div><span class="title">Start:</span><span class="s_s pk_dat pk_editable">-</span></div>' + 
+			'<div><span class="title">End:</span><span class="s_e pk_dat pk_editable">-</span></div>' + 
+			'<div><span  class="title">Duration:</span><span class="s_d pk_dat pk_editable">-</span></div>' +
 		'</div>';
 		
 		var btn_clear_selection = d.createElement ('button');
@@ -2901,6 +2954,36 @@
 		btn_clear_selection.innerHTML = '<span>Clear Selection (Q key)</span>';
 
 		var sel_spans = selection.getElementsByClassName('pk_dat');
+		
+		// Task 1: Make selection editable
+		for (var i = 0; i < sel_spans.length; i++) {
+			(function(index) {
+				sel_spans[index].onclick = function() {
+					if (!PKAudioEditor.engine.is_ready) return;
+					var currentVal = this.textContent;
+					if (currentVal === '-') return;
+					
+					var newVal = prompt("Enter new value in seconds:", currentVal);
+					if (newVal !== null && !isNaN(parseFloat(newVal))) {
+						newVal = parseFloat(newVal);
+						var region = PKAudioEditor.engine.wavesurfer.regions.list[0];
+						if (!region) {
+							region = PKAudioEditor.engine.wavesurfer.regions.add({start: 0, end: 0, id: 't'});
+						}
+						
+						if (index === 0) { // Start
+							region.update({start: newVal});
+						} else if (index === 1) { // End
+							region.update({end: newVal});
+						} else if (index === 2) { // Duration
+							region.update({end: region.start + newVal});
+						}
+						PKAudioEditor.engine.wavesurfer.fireEvent('region-updated', region);
+					}
+				};
+			})(i);
+		}
+
 		UI.listenFor ('DidCreateRegion', function ( region ) {
 			copy_btn.classList.remove ('pk_inact');
 			cut_btn.classList.remove ('pk_inact');

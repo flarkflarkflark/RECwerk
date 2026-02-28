@@ -1,0 +1,21 @@
+{
+  "name": "coolereditpro-native",
+  "version": "1.0.0",
+  "description": "Free full-featured web-based audio &amp; waveform editing tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pkalogiros/audiomass.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/pkalogiros/audiomass/issues"
+  },
+  "homepage": "https://github.com/pkalogiros/audiomass#readme"
+}

@@ -2542,7 +2542,8 @@
 		var audio_context = null;
 		var script_processor = null;
 		var media_stream_source = null;
-		var temp_buffers = []
+		var temp_buffers_L = []
+		var temp_buffers_R = []
 		var newbuff = null;
 		var sample_rate = 44100;
 		var buffer_size = 2048; // * 2 ?
@@ -2573,7 +2574,8 @@
 				// destroy audio...
 				stop_audio ();
 
-				temp_buffers = [];
+				temp_buffers_L = [];
+				temp_buffers_R = [];
 				newbuff = null;
 
 				app.ui.InteractionHandler.on = false;
@@ -2584,8 +2586,20 @@
 
 			body: '<div class="pk_rec" style="user-select:none">' +
 				'<div class="pk_row">' +
-				  '<label>Devices:</label>' +
-				  '<select style="max-width:220px"></select>' +
+				  '<div style="float:left"><label>Devices:</label>' +
+				  '<select style="max-width:220px"></select></div>' +
+				  '<div style="float:left;margin-left:20px"><label>Channels:</label>' +
+				  '<select class="pk_sel_channels"><option value="1">Mono</option><option value="2">Stereo</option></select></div>' +
+				  '<div style="float:left;margin-left:20px"><label>Sample Rate:</label>' +
+				  '<select class="pk_sel_rate"><option value="44100">44100 Hz</option><option value="48000">48000 Hz</option><option value="22050">22050 Hz</option><option value="11025">11025 Hz</option><option value="96000">96000 Hz</option></select></div>' +
+				  '<div style="clear:both"></div>' +
+				'</div>' +
+				'<div class="pk_row">' +
+				  '<div style="float:left"><label>Monitoring:</label>' +
+				  '<input type="checkbox" class="pk_monitor_toggle" style="margin-top:10px" /></div>' +
+				  '<div style="float:left;margin-left:20px"><label>Monitor Volume (200%):</label>' +
+				  '<input type="range" class="pk_monitor_vol" min="0" max="2" step="0.1" value="1.0" style="width:150px" /></div>' +
+				  '<div style="clear:both"></div>' +
 				'</div>' +
 				'<div class="pk_row">' +
 
@@ -2628,6 +2642,11 @@
 					var btn_add   = mainbtns[3];
 					var time_span = q.el_body.getElementsByTagName('span')[0];
 					var devices_sel = q.el_body.getElementsByTagName('select')[0];
+					var channels_sel = q.el_body.getElementsByClassName('pk_sel_channels')[0];
+					var rate_sel = q.el_body.getElementsByClassName('pk_sel_rate')[0];
+					var monitor_toggle = q.el_body.getElementsByClassName('pk_monitor_toggle')[0];
+					var monitor_vol = q.el_body.getElementsByClassName('pk_monitor_vol')[0];
+					var monitor_node = null;
 					var devices = [];
 					var volcanvas = q.el_body.getElementsByTagName('canvas')[0];
 					var volctx = volcanvas.getContext('2d', {alpha:false,antialias:false});
@@ -2654,7 +2673,8 @@
 					var remaining = 0;
 					var debounce = false;
 
-					temp_buffers = [];
+					var temp_buffers_L = [];
+					var temp_buffers_R = [];
 					newbuff = null;
 
 					var draw_volume = function () {
@@ -2684,14 +2704,17 @@
 						}
 
 						curr_offset += ev.inputBuffer.duration * sample_rate;
-						var float_array = ev.inputBuffer.getChannelData (0).slice (0);
-						temp_buffers[ ++temp_buffer_index ]  = float_array;
+						var float_array_L = ev.inputBuffer.getChannelData (0).slice (0);
+						var float_array_R = (channel_num > 1) ? ev.inputBuffer.getChannelData (1).slice (0) : float_array_L;
+						
+						temp_buffers_L[ ++temp_buffer_index ]  = float_array_L;
+						temp_buffers_R[ temp_buffer_index ]  = float_array_R;
 
 						var sum = 0;
 						var x;
 
 						for (var i = 0; i < buffer_size; i += 2) {
-							x = float_array[i];
+							x = float_array_L[i];
 							sum += x * x;
 						}
 
@@ -2766,13 +2789,13 @@
 									var temp2 = (temp/2048) >> 0;
 									var temp3 = temp % 2048;
 
-									if (!temp_buffers[temp2]) continue;
+									if (!temp_buffers_L[temp2]) continue;
 
-									if ( temp_buffers[temp2][ temp3 ] > max ) {
-										max = temp_buffers[temp2][ temp3 ];
+									if ( temp_buffers_L[temp2][ temp3 ] > max ) {
+										max = temp_buffers_L[temp2][ temp3 ];
 									}
-									else if ( temp_buffers[temp2][ temp3 ] < min ) {
-										min = temp_buffers[temp2][ temp3 ];
+									else if ( temp_buffers_L[temp2][ temp3 ] < min ) {
+										min = temp_buffers_L[temp2][ temp3 ];
 									}
 								}
 							}
@@ -2898,18 +2921,23 @@
 						first_skip = 10;
 
 						++temp_buffer_index;
-						var k = -1;
-						newbuff = new Float32Array (temp_buffer_index * buffer_size);
+						var k_L = -1;
+						var k_R = -1;
+						var newbuff_L = new Float32Array (temp_buffer_index * buffer_size);
+						var newbuff_R = (channel_num > 1) ? new Float32Array (temp_buffer_index * buffer_size) : null;
+
 						for (var i = 0; i < temp_buffer_index; ++i)
 						{
 							for (var j = 0; j < buffer_size; ++j)
 							{
-								newbuff[++k] = temp_buffers[i][j];
+								newbuff_L[++k_L] = temp_buffers_L[i][j];
+								if (newbuff_R) newbuff_R[++k_R] = temp_buffers_R[i][j];
 							}
 						}
 
 						temp_buffer_index = -1;
-						temp_buffers = [];
+						temp_buffers_L = [];
+						temp_buffers_R = [];
 
 						// ------
 						btn_open.style.display = 'block';
@@ -2920,6 +2948,7 @@
 						}
 
 						has_recorded = true;
+						newbuff = newbuff_R ? [newbuff_L.buffer, newbuff_R.buffer] : [newbuff_L.buffer];
 					};
 					// ---
 
@@ -2955,20 +2984,32 @@
 						}
 
 						temp_buffer_index = -1;
-						temp_buffers = [];
+						temp_buffers_L = [];
+						temp_buffers_R = [];
 						newbuff = null;
 						volume = 0;
 
 						btn_open.style.display = 'none';
 						btn_add.style.display = 'none';
 
-						audio_context = new (window.AudioContext || window.webkitAudioContext)();
+						var selected_rate = parseInt(rate_sel.value) || 44100;
+						channel_num = parseInt(channels_sel.value) || 1;
+						channel_num_out = channel_num;
+
+						try {
+							audio_context = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: selected_rate });
+						} catch (e) {
+							audio_context = new (window.AudioContext || window.webkitAudioContext)();
+						}
 						sample_rate = audio_context.sampleRate;
 
-						var audio_val = true;
+						var audio_val = {
+							sampleRate: selected_rate,
+							channelCount: channel_num
+						};
+
 						if (has_devices) {
-							audio_val = {deviceId: devices_sel.value};
-							// devices_sel.options[devices_sel.selectedIndex].value;
+							audio_val.deviceId = devices_sel.value;
 						}
 
 						navigator.mediaDevices.getUserMedia({ audio: audio_val }).then(function( stream ) {
@@ -2982,6 +3023,37 @@
 			            	media_stream_source.connect ( script_processor );
 			            	script_processor.connect ( audio_context.destination );
 
+							// -- Monitoring logic --
+							if (monitor_toggle.checked) {
+								monitor_node = audio_context.createGain();
+								monitor_node.gain.value = parseFloat(monitor_vol.value);
+								media_stream_source.connect(monitor_node);
+								monitor_node.connect(audio_context.destination);
+							}
+							
+							monitor_vol.oninput = function() {
+								if (monitor_node) {
+									monitor_node.gain.setTargetAtTime(parseFloat(this.value), audio_context.currentTime, 0.01);
+								}
+							};
+							
+							monitor_toggle.onchange = function() {
+								if (this.checked) {
+									if (!monitor_node && media_stream_source) {
+										monitor_node = audio_context.createGain();
+										monitor_node.gain.value = parseFloat(monitor_vol.value);
+										media_stream_source.connect(monitor_node);
+										monitor_node.connect(audio_context.destination);
+									}
+								} else {
+									if (monitor_node) {
+										monitor_node.disconnect();
+										monitor_node = null;
+									}
+								}
+							};
+							// -- End Monitoring --
+
 			            	is_active = true;
 			            	btn_pause.classList.remove ('pk_inact');
 			            	btn_start.innerText = 'FINISH RECORDING';
@@ -2991,7 +3063,7 @@
 			            	draw_volume ();
 
 						}).catch(function(error) {
-
+							alert("Could not access microphone with these settings.");
 						});
 
 					};
@@ -3018,9 +3090,7 @@
 						app.engine.wavesurfer.backend._add = 0;
 						app.engine.LoadDB ({
 							samplerate: sample_rate,
-							data: [
-								newbuff.buffer
-							]
+							data: newbuff
 						});
 
 						// ----
@@ -3040,9 +3110,7 @@
 						app.engine.wavesurfer.backend._add = 1;
 						app.engine.LoadDB ({
 							samplerate: sample_rate,
-							data: [
-								newbuff.buffer
-							]
+							data: newbuff
 						});
 
 						// ----

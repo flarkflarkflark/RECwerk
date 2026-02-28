@@ -24,7 +24,7 @@ body{
 	-webkit-text-size-adjust:100%
 }*/
 
-body,html{height:100%;background:#111;
+body,html{height:100%;background:#1B2B33;
 	/*overflow:hidden*/
 }
 
@@ -47,7 +47,8 @@ body,html{height:100%;background:#111;
 	padding:0 5px;
 	height:24px;
 	position:relative;
-	border-bottom:1px solid #454545
+	border-bottom:1px solid #335566;
+    background:#1B2B33;
 }
 
 .pk_hdr .pk_btn{
@@ -455,9 +456,16 @@ a{cursor:pointer;color:#99c2c6;-webkit-tap-highlight-color:rgba(0,0,0,0)}
 .pk_selection .pk_dat{
 	background:#383838;
 	padding:2px 5px;
-	color:#99c2c6;
+	color:#99FF00;
 	min-width: 14px;
-    display: inline-block
+    display: inline-block;
+    cursor: pointer;
+    text-decoration: underline dotted;
+}
+
+.pk_selection .pk_dat:hover {
+	background: #335566;
+	color: #FFFFFF;
 }
 
 .pk_btn.icon-clearsel{
