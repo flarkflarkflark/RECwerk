@@ -243,6 +243,99 @@ a{cursor:pointer;color:#99c2c6;-webkit-tap-highlight-color:rgba(0,0,0,0)}
     line-height:32px;
 }
 
+.pk_emptystate{
+    margin: 0;
+    width: min(560px, calc(100% - 52px));
+    height: auto;
+    padding: 26px 28px 24px 28px;
+    transform: translate(-50%, -50%);
+    border: 1px solid #335566;
+    border-radius: 10px;
+    background:
+        radial-gradient(circle at top, rgba(153,255,0,0.09), transparent 42%),
+        linear-gradient(180deg, rgba(20,35,48,0.96), rgba(10,18,24,0.97));
+    box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+    text-shadow: none;
+    line-height: 1.45;
+    text-align: left;
+}
+
+.pk_empty_logo{
+    display: block;
+    width: min(280px, 100%);
+    margin: 0 0 14px 0;
+}
+
+.pk_empty_badge{
+    display: inline-block;
+    margin-bottom: 14px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1px solid #335566;
+    background: rgba(18, 48, 66, 0.78);
+    color: #99c2c6;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.pk_empty_title{
+    color: #fff;
+    font-size: 28px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+}
+
+.pk_empty_copy,
+.pk_empty_meta{
+    color: #c7d8dc;
+    font-size: 14px;
+}
+
+.pk_empty_meta{
+    color: #95aeb2;
+    font-size: 12px;
+    margin-top: 14px;
+}
+
+.pk_empty_actions{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.pk_empty_btn{
+    border: 1px solid #335566;
+    border-radius: 999px;
+    background: rgba(28, 53, 72, 0.92);
+    color: #d9e9ee;
+    padding: 10px 16px;
+    font-size: 13px;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 140ms ease, color 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+}
+
+.pk_empty_btn:hover{
+    background: rgba(52, 86, 112, 0.98);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(153,255,0,0.18);
+}
+
+.pk_empty_btn_primary{
+    border-color: #6f9f17;
+    background: linear-gradient(180deg, #405f0d, #2c4305);
+    color: #d7ff94;
+}
+
+.pk_empty_btn_primary:hover{
+    background: linear-gradient(180deg, #517817, #375409);
+    color: #fff;
+}
+
 .pk_tmpMsg2{
 	position: fixed;
 	background:rgba(0,0,0,0.6);
@@ -1551,6 +1644,19 @@ input.pk_horiz.pk_w180{
 		line-height:28px;
 		margin-left:-120px;
     	width:240px
+	}
+
+	.pk_emptystate{
+		width: calc(100% - 30px);
+		padding: 18px 18px 16px 18px;
+	}
+
+	.pk_empty_title{
+		font-size: 21px;
+	}
+
+	.pk_empty_actions{
+		flex-direction: column;
 	}
 
 	.pk_mob .pk_hdr{
